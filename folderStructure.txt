@@ -1,0 +1,67 @@
+qa-insights-hub-main
+├── client
+│   ├── .gitignore
+│   ├── bun.lockb
+│   ├── components.json
+│   ├── demoData.json
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package.json
+|   |__.gitignore
+│   ├── postcss.config.js
+│   ├── README.md
+│   ├── tailwind.config.ts
+│   ├── tsconfig.app.json
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   ├── vite.config.ts
+│   ├── public
+│   │   ├── favicon.ico
+│   │   ├── placeholder.svg
+│   │   └── robots.txt
+│   └── src
+│       ├── App.css
+│       ├── App.tsx
+│       ├── index.css
+│       ├── main.tsx
+│       ├── vite-env.d.ts
+│       ├── components
+│       │   ├── NavLink.tsx
+│       │   ├── dashboard
+│       │   │   ├── BuildTimeline.tsx
+│       │   │   ├── InsightsPanel.tsx
+│       │   │   └── MetricCard.tsx
+│       │   ├── layout
+│       │   │   └── DashboardLayout.tsx
+│       │   └── ui
+│       │       ├── alluicomponentsimported
+│       ├── data
+│       │   └── mockData.ts
+│       ├── hooks
+│       │   ├── use-mobile.tsx
+│       │   └── use-toast.ts
+│       ├── lib
+│       │   └── utils.ts
+│       ├── pages
+│       │   ├── FeatureDeepDive.tsx
+│       │   ├── FeatureRisk.tsx
+│       │   ├── HistoricalBugs.tsx
+│       │   ├── Index.tsx
+│       │   └── NotFound.tsx
+│       └── services
+│           └── serverApi.ts
+├── server
+│   ├── .env
+│   ├── db.js
+│   ├── index.js
+│   ├── loadDemo.js
+|   |__.gitignore
+│   ├── package.json
+│   ├── routes
+│   │   └── builds.js
+│   └── services
+│       └── gemini.js
+|
+|__.gitignore
+|__folderStructure.txt
+|__package-lock.json

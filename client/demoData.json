@@ -1,0 +1,511 @@
+{
+    "release_cycle_name": "Release Cycle 2025-Q1",
+    "project_code": "ECOMM_PRO_X",
+    "builds": [
+        {
+            "build_id": "B-4.5.2",
+            "build_date": "2025-12-20T14:00:00Z",
+            "total_modules": 5,
+            "total_features": 10,
+            "total_test_cases": 50,
+            "modules": [
+                {
+                    "module_id": "MOD_01",
+                    "module_name": "Authentication",
+                    "features": [
+                        {
+                            "feature_id": "FEAT_01_01",
+                            "feature_name": "User Login",
+                            "test_cases": [
+                                {
+                                    "tc_id": "TC_001",
+                                    "title": "Valid Login",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndef test_valid_login():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/login')\n    driver.find_element(By.ID, 'email').send_keys('user@demo.com')\n    driver.find_element(By.ID, 'password').send_keys('Pass1234')\n    driver.find_element(By.ID, 'btn-login').click()\n    assert 'Dashboard' in driver.title\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_002",
+                                    "title": "Invalid Password",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndef test_invalid_pass():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/login')\n    driver.find_element(By.ID, 'email').send_keys('user@demo.com')\n    driver.find_element(By.ID, 'password').send_keys('WrongPass')\n    driver.find_element(By.ID, 'btn-login').click()\n    error = driver.find_element(By.CLASS_NAME, 'alert-error').text\n    assert 'Invalid credentials' in error\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_003",
+                                    "title": "Empty Fields Validation",
+                                    "status": "Failed",
+                                    "bug_info": {
+                                        "severity": "P2",
+                                        "error_log": "AssertionError: Validation message missing",
+                                        "ai_analysis": "The frontend is not triggering the JS validation for empty fields; server returns 500 error instead of client-side warning."
+                                    },
+                                    "script_content": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndef test_empty_login():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/login')\n    driver.find_element(By.ID, 'btn-login').click()\n    # BUG: Page crashes instead of showing validation\n    msg = driver.find_element(By.ID, 'email-error').text\n    assert 'Email is required' in msg\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_004",
+                                    "title": "SQL Injection Attempt",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndef test_sql_inject():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/login')\n    driver.find_element(By.ID, 'email').send_keys(\"' OR 1=1 --\")\n    driver.find_element(By.ID, 'password').send_keys('random')\n    driver.find_element(By.ID, 'btn-login').click()\n    assert 'Dashboard' not in driver.title\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_005",
+                                    "title": "Login with Locked Account",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndef test_locked_user():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/login')\n    driver.find_element(By.ID, 'email').send_keys('locked@demo.com')\n    driver.find_element(By.ID, 'password').send_keys('Pass1234')\n    driver.find_element(By.ID, 'btn-login').click()\n    assert 'Account Locked' in driver.page_source\n    driver.quit()"
+                                }
+                            ]
+                        },
+                        {
+                            "feature_id": "FEAT_01_02",
+                            "feature_name": "Sign Up / Registration",
+                            "test_cases": [
+                                {
+                                    "tc_id": "TC_006",
+                                    "title": "Successful Registration",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_register_success():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/register')\n    # ... fill form logic ...\n    driver.find_element(By.ID, 'btn-signup').click()\n    assert 'Welcome' in driver.title\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_007",
+                                    "title": "Duplicate Email Check",
+                                    "status": "Failed",
+                                    "bug_info": {
+                                        "severity": "P1",
+                                        "error_log": "DuplicateEntryException: DB Constraint Violation",
+                                        "ai_analysis": "The backend API is not catching the duplicate email before hitting the database, causing a crash."
+                                    },
+                                    "script_content": "from selenium import webdriver\n\ndef test_dup_email():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/register')\n    driver.find_element(By.ID, 'email').send_keys('existing@test.com')\n    driver.find_element(By.ID, 'btn-signup').click()\n    # BUG: 500 Error Page displayed\n    assert 'Email already exists' in driver.page_source\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_008",
+                                    "title": "Weak Password Validation",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_weak_pass():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/register')\n    driver.find_element(By.ID, 'password').send_keys('123')\n    assert 'Password too weak' in driver.find_element(By.ID, 'pass-error').text\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_009",
+                                    "title": "Terms of Service Checkbox",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_tos_checkbox():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/register')\n    driver.find_element(By.ID, 'btn-signup').click()\n    assert 'Accept TOS' in driver.page_source\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_010",
+                                    "title": "Email Format Validation",
+                                    "status": "Failed",
+                                    "bug_info": {
+                                        "severity": "P3",
+                                        "error_log": "AssertionError: Regex validation failed",
+                                        "ai_analysis": "The regex pattern allows emails without dots (e.g. user@com) which should be invalid."
+                                    },
+                                    "script_content": "from selenium import webdriver\n\ndef test_email_format():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/register')\n    driver.find_element(By.ID, 'email').send_keys('user@com')\n    driver.find_element(By.ID, 'btn-signup').click()\n    # BUG: It accepts the email\n    assert 'Invalid Email' in driver.find_element(By.ID, 'email-error').text\n    driver.quit()"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "module_id": "MOD_02",
+                    "module_name": "Product Catalog",
+                    "features": [
+                        {
+                            "feature_id": "FEAT_02_01",
+                            "feature_name": "Search Functionality",
+                            "test_cases": [
+                                {
+                                    "tc_id": "TC_011",
+                                    "title": "Search by Exact Name",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_search_exact():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com')\n    driver.find_element(By.NAME, 'q').send_keys('iPhone 15')\n    driver.find_element(By.CLASS_NAME, 'search-icon').click()\n    assert 'iPhone 15' in driver.find_element(By.CLASS_NAME, 'product-title').text\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_012",
+                                    "title": "Search No Results",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_search_empty():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com')\n    driver.find_element(By.NAME, 'q').send_keys('xyz123random')\n    driver.find_element(By.CLASS_NAME, 'search-icon').click()\n    assert 'No results found' in driver.page_source\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_013",
+                                    "title": "Search Special Characters",
+                                    "status": "Failed",
+                                    "bug_info": {
+                                        "severity": "P2",
+                                        "error_log": "500 Internal Server Error",
+                                        "ai_analysis": "The search query is not sanitized against special characters like %, causing a DB syntax error."
+                                    },
+                                    "script_content": "from selenium import webdriver\n\ndef test_search_special():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com')\n    driver.find_element(By.NAME, 'q').send_keys('%%%')\n    driver.find_element(By.CLASS_NAME, 'search-icon').click()\n    # BUG: Server crashes\n    assert 'Internal Server Error' not in driver.page_source\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_014",
+                                    "title": "Search Autosuggest",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_autosuggest():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com')\n    driver.find_element(By.NAME, 'q').send_keys('Sam')\n    time.sleep(1)\n    suggestions = driver.find_elements(By.CLASS_NAME, 'suggestion-item')\n    assert len(suggestions) > 0\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_015",
+                                    "title": "Search Case Insensitivity",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_search_case():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com')\n    driver.find_element(By.NAME, 'q').send_keys('iphone')\n    driver.find_element(By.CLASS_NAME, 'search-icon').click()\n    assert 'iPhone' in driver.page_source\n    driver.quit()"
+                                }
+                            ]
+                        },
+                        {
+                            "feature_id": "FEAT_02_02",
+                            "feature_name": "Product Filters",
+                            "test_cases": [
+                                {
+                                    "tc_id": "TC_016",
+                                    "title": "Filter by Price Range",
+                                    "status": "Failed",
+                                    "bug_info": {
+                                        "severity": "P1",
+                                        "error_log": "AssertionError: Products outside range displayed",
+                                        "ai_analysis": "The 'Max Price' filter logic is inverted in the backend query (Min > Val instead of Max < Val)."
+                                    },
+                                    "script_content": "from selenium import webdriver\n\ndef test_filter_price():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/products')\n    driver.find_element(By.ID, 'price-max').send_keys('100')\n    driver.find_element(By.ID, 'btn-filter').click()\n    prices = [int(p.text) for p in driver.find_elements(By.CLASS_NAME, 'price')]\n    # BUG: Shows items costing 500\n    assert all(p <= 100 for p in prices)\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_017",
+                                    "title": "Filter by Category",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_filter_category():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/products')\n    driver.find_element(By.ID, 'chk-electronics').click()\n    titles = driver.find_elements(By.CLASS_NAME, 'prod-title')\n    # Verify all are electronics\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_018",
+                                    "title": "Filter by Brand",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_filter_brand():\n    # Script to click 'Samsung' checkbox\n    # Assert all visible items are Samsung\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_019",
+                                    "title": "Clear All Filters",
+                                    "status": "Failed",
+                                    "bug_info": {
+                                        "severity": "P3",
+                                        "error_log": "ElementNotInteractable",
+                                        "ai_analysis": "The 'Clear Filters' button is overlapped by the chat widget on mobile viewports."
+                                    },
+                                    "script_content": "from selenium import webdriver\n\ndef test_clear_filter():\n    driver = webdriver.Chrome()\n    driver.set_window_size(375, 812)\n    driver.get('https://staging.shop.com/products')\n    driver.find_element(By.ID, 'btn-clear').click()\n    # BUG: Click intercepted\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_020",
+                                    "title": "Multiple Filters Combination",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_multi_filter():\n    # Apply Price + Brand + Category\n    # Verify results match all criteria\n    pass"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "module_id": "MOD_03",
+                    "module_name": "Shopping Cart",
+                    "features": [
+                        {
+                            "feature_id": "FEAT_03_01",
+                            "feature_name": "Cart Management",
+                            "test_cases": [
+                                {
+                                    "tc_id": "TC_021",
+                                    "title": "Add Item to Cart",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_add_cart():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/product/1')\n    driver.find_element(By.ID, 'add-to-cart').click()\n    assert '1' in driver.find_element(By.ID, 'cart-badge').text\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_022",
+                                    "title": "Remove Item from Cart",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_remove_cart():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/cart')\n    driver.find_element(By.ID, 'remove-item-1').click()\n    assert 'Cart is empty' in driver.page_source\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_023",
+                                    "title": "Update Quantity",
+                                    "status": "Failed",
+                                    "bug_info": {
+                                        "severity": "P2",
+                                        "error_log": "AssertionError: Total price not updated",
+                                        "ai_analysis": "The AJAX call to update the total price fails when quantity is changed rapidly."
+                                    },
+                                    "script_content": "from selenium import webdriver\n\ndef test_update_qty():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/cart')\n    input = driver.find_element(By.ID, 'qty-1')\n    input.clear()\n    input.send_keys('2')\n    # BUG: Total price remains for 1 item\n    assert driver.find_element(By.ID, 'total').text == '$200.00'\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_024",
+                                    "title": "Add Out of Stock Item",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_add_oos():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/product/99')\n    btn = driver.find_element(By.ID, 'add-to-cart')\n    assert btn.get_attribute('disabled') == 'true'\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_025",
+                                    "title": "Cart Persistence (Cookie)",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_cart_persist():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/product/1')\n    driver.find_element(By.ID, 'add-to-cart').click()\n    driver.refresh()\n    assert '1' in driver.find_element(By.ID, 'cart-badge').text\n    driver.quit()"
+                                }
+                            ]
+                        },
+                        {
+                            "feature_id": "FEAT_03_02",
+                            "feature_name": "Price Calculation",
+                            "test_cases": [
+                                {
+                                    "tc_id": "TC_026",
+                                    "title": "Subtotal Calculation",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_subtotal():\n    # Add 2 items of $50\n    # Assert Subtotal is $100\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_027",
+                                    "title": "Tax Calculation",
+                                    "status": "Failed",
+                                    "bug_info": {
+                                        "severity": "P1",
+                                        "error_log": "AssertionError: Tax calculated as 0",
+                                        "ai_analysis": "The tax API service is timing out, defaulting to 0 tax instead of retrying."
+                                    },
+                                    "script_content": "from selenium import webdriver\n\ndef test_tax_calc():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/cart')\n    # BUG: Tax shows $0.00\n    tax = driver.find_element(By.ID, 'tax-amt').text\n    assert tax != '$0.00'\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_028",
+                                    "title": "Shipping Cost Logic",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_shipping():\n    # If total > $500, shipping should be free\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_029",
+                                    "title": "Discount Code Application",
+                                    "status": "Failed",
+                                    "bug_info": {
+                                        "severity": "P2",
+                                        "error_log": "AssertionError: Discount applied twice",
+                                        "ai_analysis": "Double-clicking the 'Apply Coupon' button sends two requests, stacking the discount."
+                                    },
+                                    "script_content": "from selenium import webdriver\n\ndef test_coupon():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/cart')\n    driver.find_element(By.ID, 'coupon').send_keys('SAVE10')\n    driver.find_element(By.ID, 'apply').click()\n    # BUG: Total reduced by 20% instead of 10%\n    assert total == expected_total\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_030",
+                                    "title": "Total Grand Sum",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_grand_total():\n    # Assert Subtotal + Tax + Shipping - Discount == Total\n    pass"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "module_id": "MOD_04",
+                    "module_name": "Checkout & Payments",
+                    "features": [
+                        {
+                            "feature_id": "FEAT_04_01",
+                            "feature_name": "Payment Gateway",
+                            "test_cases": [
+                                {
+                                    "tc_id": "TC_031",
+                                    "title": "Credit Card Valid",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_cc_valid():\n    # Switch to iframe\n    # Fill CC details\n    # Click Pay\n    # Assert Success Page\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_032",
+                                    "title": "Credit Card Declined",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_cc_decline():\n    # Use Stripe Test Card for decline\n    # Assert error message 'Card Declined'\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_033",
+                                    "title": "Payment Timeout Handling",
+                                    "status": "Failed",
+                                    "bug_info": {
+                                        "severity": "P1",
+                                        "error_log": "TimeoutException: Spinner never disappears",
+                                        "ai_analysis": "The frontend is not receiving the webhook callback from the payment provider."
+                                    },
+                                    "script_content": "from selenium import webdriver\n\ndef test_timeout():\n    driver = webdriver.Chrome()\n    # ... payment steps ...\n    # BUG: Spinner spins forever\n    WebDriverWait(driver, 10).until(EC.invisibility_of_element_located((By.ID, 'spinner')))\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_034",
+                                    "title": "PayPal Integration",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_paypal():\n    # Click PayPal button\n    # Assert redirect to paypal.com\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_035",
+                                    "title": "Currency Conversion",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_currency():\n    # Change currency to EUR\n    # Assert Payment Gateway shows EUR\n    pass"
+                                }
+                            ]
+                        },
+                        {
+                            "feature_id": "FEAT_04_02",
+                            "feature_name": "Order Placement",
+                            "test_cases": [
+                                {
+                                    "tc_id": "TC_036",
+                                    "title": "Guest Checkout",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_guest_checkout():\n    # Checkout without logging in\n    # Assert Order Placed\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_037",
+                                    "title": "Shipping Address Validation",
+                                    "status": "Failed",
+                                    "bug_info": {
+                                        "severity": "P2",
+                                        "error_log": "AssertionError: Invalid Zip Code Accepted",
+                                        "ai_analysis": "The zip code validation regex is missing for International addresses."
+                                    },
+                                    "script_content": "from selenium import webdriver\n\ndef test_address_val():\n    driver = webdriver.Chrome()\n    # Enter Zip: 00000 (Invalid)\n    # BUG: It accepts it\n    driver.find_element(By.ID, 'btn-next').click()\n    assert 'Invalid Zip' in driver.page_source\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_038",
+                                    "title": "Order Summary Verify",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_summary():\n    # Verify items in final summary match cart\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_039",
+                                    "title": "Email Confirmation Trigger",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_email_trigger():\n    # Place Order\n    # Check Mock Email Server for receipt\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_040",
+                                    "title": "Stock Deduction",
+                                    "status": "Failed",
+                                    "bug_info": {
+                                        "severity": "P1",
+                                        "error_log": "AssertionError: Stock count did not decrease",
+                                        "ai_analysis": "Race condition in Inventory Microservice prevents stock deduction during high load."
+                                    },
+                                    "script_content": "from selenium import webdriver\n\ndef test_stock_deduct():\n    # Get initial stock\n    # Buy item\n    # Get final stock\n    # BUG: Initial == Final\n    assert final_stock == initial_stock - 1\n    driver.quit()"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "module_id": "MOD_05",
+                    "module_name": "User Profile",
+                    "features": [
+                        {
+                            "feature_id": "FEAT_05_01",
+                            "feature_name": "Profile Management",
+                            "test_cases": [
+                                {
+                                    "tc_id": "TC_041",
+                                    "title": "Update Avatar",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_update_avatar():\n    # Upload image\n    # Assert new image src is loaded\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_042",
+                                    "title": "Change Password",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_change_pass():\n    # Enter old pass, new pass\n    # Assert 'Password Updated'\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_043",
+                                    "title": "Update Address",
+                                    "status": "Failed",
+                                    "bug_info": {
+                                        "severity": "P3",
+                                        "error_log": "StaleElementReferenceException",
+                                        "ai_analysis": "The DOM refreshes twice upon saving address, causing the script to lose the reference to the success message."
+                                    },
+                                    "script_content": "from selenium import webdriver\n\ndef test_update_addr():\n    # Update address\n    # Click Save\n    # BUG: Script fails to read message\n    msg = driver.find_element(By.ID, 'msg').text\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_044",
+                                    "title": "Delete Account",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_delete_account():\n    # Click Delete, Confirm\n    # Assert Redirect to Homepage\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_045",
+                                    "title": "Notification Settings",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_notif_settings():\n    # Toggle Email Notifications Off\n    # Reload page, verify still Off\n    pass"
+                                }
+                            ]
+                        },
+                        {
+                            "feature_id": "FEAT_05_02",
+                            "feature_name": "Order History",
+                            "test_cases": [
+                                {
+                                    "tc_id": "TC_046",
+                                    "title": "View Past Orders",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_view_orders():\n    # Go to /orders\n    # Assert list is not empty\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_047",
+                                    "title": "Re-order Items",
+                                    "status": "Failed",
+                                    "bug_info": {
+                                        "severity": "P2",
+                                        "error_log": "404 Not Found",
+                                        "ai_analysis": "The 'Buy Again' link points to a deprecated product URL structure."
+                                    },
+                                    "script_content": "from selenium import webdriver\n\ndef test_reorder():\n    driver = webdriver.Chrome()\n    driver.get('https://staging.shop.com/orders')\n    driver.find_element(By.LINK_TEXT, 'Buy Again').click()\n    # BUG: 404 Page\n    assert 'Product' in driver.title\n    driver.quit()"
+                                },
+                                {
+                                    "tc_id": "TC_048",
+                                    "title": "Download Invoice PDF",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_download_invoice():\n    # Click Download Invoice\n    # Verify file exists in download dir\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_049",
+                                    "title": "Filter Orders by Date",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_filter_orders():\n    # Select 'Last 30 Days'\n    # Verify dates in list\n    pass"
+                                },
+                                {
+                                    "tc_id": "TC_050",
+                                    "title": "Track Shipment",
+                                    "status": "Passed",
+                                    "bug_info": null,
+                                    "script_content": "from selenium import webdriver\n\ndef test_track_shipment():\n    # Click Track\n    # Assert Tracking Number is displayed\n    pass"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
