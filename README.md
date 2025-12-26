@@ -1,6 +1,6 @@
 # QA Insights Hub 🧠
 
-> **Predict where your next bug will appear—before it breaks production.**
+> **Anticipate high-risk features before they impact production.**
 
 QA Insights Hub is a **smart test analytics platform** that transforms raw test execution data into actionable intelligence. By combining historical release patterns with LLM-based root cause analysis, it allows engineering teams to move from *reactive* bug fixing to *predictive* quality assurance.
 
@@ -29,7 +29,7 @@ graph TD
     A[CI/CD Build Data] -->|JSON Ingestion| B(Node.js API)
     B -->|Pass Results| C[MongoDB Archive]
     B -->|Fail Results| D[AI Processor]
-    D -->|Context + Error Logs| E[Gemini 1.5 Flash]
+    D -->|Test Script + Error Logs| E[llm engine]
     E -->|RCA + Fix Suggestions| C
     C -->|Historical Trends| F[Risk Engine]
     F -->|Weighted Risk Score| G[React Dashboard]
@@ -39,7 +39,7 @@ graph TD
 ### Core Principles
 
 1. ** Intelligent Failure Analysis (RCA)**
-When a test fails, the system sends the script context and error trace to the **Gemini AI Engine**. It understands the build structure and returns:
+When a test fails, the system sends the script context and error trace to the **llm AI Engine**. It understands the build structure and returns:
 * Natural language explanation of the error.
 * Specific code fix recommendations.
 * *Optimization:* Passing tests skip this step to reduce API latency and cost.
@@ -48,7 +48,7 @@ When a test fails, the system sends the script context and error trace to the **
 2. ** Mathematical Risk Prediction**
 We don't guess; we calculate. Every feature is assigned a **Risk Score (0-100%)**.
 * **Logic:** Weighted Moving Average across the last `N=5` builds.
-* **Weighting:** Recent builds carry higher coefficients (), ensuring the score reflects current stability while acknowledging historical flakiness.
+* **Weighting:** Recent builds carry higher coefficients (recency-weighted scoring), ensuring the score reflects current stability while acknowledging historical flakiness.
 * **Outcome:** Recommendations for `Full Retest`, `Partial Retest`, or `No Retest`.
 
 
@@ -68,7 +68,7 @@ Built for performance, scalability, and maintainability.
 | **Visualization** | Recharts | Rendering complex risk trend lines and heatmaps. |
 | **Backend** | Node.js + Express | RESTful API orchestration. |
 | **Database** | MongoDB | Flexible schema for hierarchical build/test data. |
-| **AI Engine** | Google Gemini 1.5 | Contextual analysis and code-level debugging. |
+| **AI Engine** | llm | Contextual analysis and code-level debugging. |
 
 ---
 
@@ -78,14 +78,14 @@ Built for performance, scalability, and maintainability.
 
 * Node.js v18+
 * MongoDB (Local or Atlas)
-* Google Gemini API Key
+* llm API Key
 
 ### Installation
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/qa-insights-hub.git
-cd qa-insights-hub
+git clone [(https://github.com/amitthakur003/PredictiveQA.git)]
+cd PredictiveQA
 
 ```
 
@@ -101,8 +101,9 @@ npm install
 Create a `.env` file in the `/server` directory:
 ```env
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/qa-insights
-GEMINI_API_KEY=your_google_api_key_here
+MONGO_URI=mongodb://localhost:27017/yourDbName
+GEMINI_API_KEY=your_google_gemini_api_key_here (because I am using this)
+
 
 ```
 
@@ -159,5 +160,5 @@ This is a tool built to solve real-world QA bottlenecks. Contributions are welco
 ---
 
 <p align="center">
-Built with ❤️ by [Your Name]
+Built with ❤️ by Amit Thakur
 </p>
