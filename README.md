@@ -4,7 +4,8 @@
 
 QA Insights Hub is a **smart test analytics platform** that transforms raw test execution data into actionable intelligence. By combining historical release patterns with LLM-based root cause analysis, it allows engineering teams to move from *reactive* bug fixing to *predictive* quality assurance.
 
-*(Place screenshot of your main dashboard here)*
+<img width="1903" height="916" alt="image" src="https://github.com/user-attachments/assets/919b0abe-b9b6-414f-ae1f-223d7bab639c" />
+
 
 ---
 
